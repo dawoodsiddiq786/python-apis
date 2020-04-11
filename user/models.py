@@ -57,7 +57,7 @@ class User(AbstractBaseUser):
     REQUIRED_FIELDS = []
 
 
-class Category(models.Model):
+class Categorie(models.Model):
     name = models.CharField(max_length=50, default='')
     description = models.CharField(max_length=500, default='')
     image = models.ImageField(upload_to='images/')
@@ -76,7 +76,7 @@ class Media(models.Model):
 
 
 class Product(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.PROTECT, null=True)
+    category = models.ForeignKey(Categorie, on_delete=models.PROTECT, null=True)
     name = models.CharField(max_length=50, default='')
     description = models.CharField(max_length=500, default='')
     media = models.ManyToManyField(Media)
@@ -101,17 +101,17 @@ class Order(models.Model):
         return str(self.created_at)
 
 
-class Comments(models.Model):
+class Comment(models.Model):
     description = models.CharField(max_length=500, default='')
     posted_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
 
-class UserPost(models.Model):
+class Post(models.Model):
     description = models.CharField(max_length=500, default='')
     media = models.ManyToManyField(Media, related_name='likffes')
     posted_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     likes = models.ManyToManyField(User, related_name='likces', default=None)
-    comments = models.ManyToManyField(Comments, related_name='cc', default=None)
+    comments = models.ManyToManyField(Comment, related_name='cc', default=None)
     created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):

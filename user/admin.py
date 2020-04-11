@@ -23,7 +23,7 @@ class CategoryShow(admin.ModelAdmin):
     list_filter = ('created', )
 
 
-admin.site.register(Category, CategoryShow)
+admin.site.register(Categorie, CategoryShow)
 
 
 
@@ -55,4 +55,4 @@ class UserPostShow(admin.ModelAdmin):
     list_filter = ('created_at', )
 
 
-admin.site.register(UserPost, UserPostShow)
+admin.site.register(Post, UserPostShow)
