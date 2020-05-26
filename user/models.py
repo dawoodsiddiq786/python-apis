@@ -49,7 +49,8 @@ class User(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
     password = models.CharField(max_length=20, default=None)
-    image = models.ImageField(upload_to='images/', default=None)
+    image = models.URLField(blank=True,
+                            default='https://elysator.com/wp-content/uploads/blank-profile-picture-973460_1280-e1523978675847.png')
     address = models.CharField(max_length=600, default='')
     date_joined = models.DateTimeField(default=timezone.now)
 
@@ -60,7 +61,8 @@ class User(AbstractBaseUser):
 class Categorie(models.Model):
     name = models.CharField(max_length=50, default='')
     description = models.CharField(max_length=500, default='')
-    image = models.ImageField(upload_to='images/')
+    image = models.URLField(blank=True,
+                          default='https://elysator.com/wp-content/uploads/blank-profile-picture-973460_1280-e1523978675847.png')
     created = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
