@@ -56,3 +56,4 @@ class UserPostShow(admin.ModelAdmin):
 
 
 admin.site.register(Post, UserPostShow)
+admin.site.register(Comment)

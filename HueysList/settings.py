@@ -26,6 +26,7 @@ SECRET_KEY = 'jpcicdy_7ttgzsl$$l%_1#i(ff$tn4qn82dgx*2-8*aoc#561a'
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+CORS_ORIGIN_ALLOW_ALL = True
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -39,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'fcm_django',
     'rest_framework_swagger',
     'user.apps.UserConfig',
 ]
@@ -118,7 +120,20 @@ USE_L10N = True
 
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.2/howto/static-files/
-
 STATIC_URL = '/static/'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+FCM_DJANGO_SETTINGS = {
+    "APP_VERBOSE_NAME": "HueysList",
+    # default: _('FCM Django')
+    "FCM_SERVER_KEY": "AAAAO_mAX6UfvCvE0hWDdV",
+    # true if you want to have only one active device per registered user at a time
+    # default: False
+    "ONE_DEVICE_PER_USER": True,
+    # devices to which notifications cannot be sent,
+    # are deleted upon receiving error response from FCM
+    # default: False
+    "DELETE_INACTIVE_DEVICES": False,
+}
