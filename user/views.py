@@ -47,7 +47,7 @@ def simple_upload(request):
         filename = fs.save(myfile.name, myfile)
         uploaded_file_url = fs.url(filename)
 
-        return Response({'url': 'http://18.217.127.10:9000' + uploaded_file_url}, status=status.HTTP_201_CREATED)
+        return Response({'url': 'http://18.217.127.10:9001' + uploaded_file_url}, status=status.HTTP_201_CREATED)
     return Response({'result': 'Only Post Requ'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
