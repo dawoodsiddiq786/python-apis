@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import render
 from rest_framework import status, viewsets
 # Create your views here.
@@ -19,6 +21,20 @@ def login(request):
         return Response(data=UserSerializer(user, many=True).data, status=status.HTTP_200_OK)
 
 
+@api_view(['POST'])
+def make_post(request):
+    if request.method == 'POST':
+        description = request.POST.get("description")
+        posted_by = request.POST.get("posted_by")
+        media = request.POST.get("media")
+        post = Post(description=description, posted_by_id=posted_by)
+        post.save()
+        for m in json.loads(media):
+            post.media.add(m)
+        post.save()
+        return Response(data=PostSerializer(post, many=False).data, status=status.HTTP_200_OK)
+
+
 class UserViewset(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -28,6 +44,15 @@ class PostView(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
+
+class PostViewCreate(viewsets.ModelViewSet):
+    queryset = Post.objects.all()
+    serializer_class = PostSkinnySerializer
+
+
+class MediaView(viewsets.ModelViewSet):
+    queryset = Media.objects.all()
+    serializer_class = MediaSerializer
 
 
 class CommentView(viewsets.ModelViewSet):
@@ -39,6 +64,7 @@ class ProductView(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
+
 @api_view(['POST'])
 def simple_upload(request):
     if request.method == 'POST' and request.FILES['file']:
@@ -49,8 +75,6 @@ def simple_upload(request):
 
         return Response({'url': 'http://18.217.127.10:9001' + uploaded_file_url}, status=status.HTTP_201_CREATED)
     return Response({'result': 'Only Post Requ'}, status=status.HTTP_401_UNAUTHORIZED)
-
-
 
 #
 #

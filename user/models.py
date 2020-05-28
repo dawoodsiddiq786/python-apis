@@ -1,8 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import UserManager, Group as RoleModel, PermissionsMixin
-# Create your models here.
 from django.contrib.auth.base_user import AbstractBaseUser
-
 from django.utils import timezone
 from rest_framework.pagination import LimitOffsetPagination
 
@@ -62,7 +60,7 @@ class Categorie(models.Model):
     name = models.CharField(max_length=50, default='')
     description = models.CharField(max_length=500, default='')
     image = models.URLField(blank=True,
-                          default='https://elysator.com/wp-content/uploads/blank-profile-picture-973460_1280-e1523978675847.png')
+                            default='https://elysator.com/wp-content/uploads/blank-profile-picture-973460_1280-e1523978675847.png')
     created = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
@@ -71,7 +69,8 @@ class Categorie(models.Model):
 
 class Media(models.Model):
     created = models.DateTimeField(default=timezone.now)
-    image = models.FileField(upload_to='images/')
+    image = models.URLField(blank=True,
+                            default='https://elysator.com/wp-content/uploads/blank-profile-picture-973460_1280-e1523978675847.png')
 
     def __str__(self):
         return str(self.created)
@@ -112,8 +111,8 @@ class Post(models.Model):
     description = models.CharField(max_length=500, default='')
     media = models.ManyToManyField(Media, related_name='likffes')
     posted_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    likes = models.ManyToManyField(User, related_name='likces', default=None)
-    comments = models.ManyToManyField(Comment, related_name='cc', default=None)
+    likes = models.ManyToManyField(User, related_name='likces', default=None,null=True)
+    comments = models.ManyToManyField(Comment, related_name='cc', default=None,null=True)
     created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
