@@ -8,15 +8,18 @@ class UserSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ProductSerializer(serializers.ModelSerializer):
+class ProductSerializerSkinny(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = '__all__'
+
 
 class MediaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Media
         fields = '__all__'
+
+
 class CommentSerializer(serializers.ModelSerializer):
     posted_by = UserSerializer(many=False)
 
@@ -29,18 +32,30 @@ class PostSerializer(serializers.ModelSerializer):
     posted_by = UserSerializer(many=False)
     likes = UserSerializer(many=True)
     comments = CommentSerializer(many=True)
-    media=MediaSerializer(many=True)
+    media = MediaSerializer(many=True)
 
     class Meta:
         model = Post
         fields = '__all__'
-
 
 
 class PostSkinnySerializer(serializers.ModelSerializer):
-
-
     class Meta:
         model = Post
         fields = '__all__'
 
+
+class Categoryerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Categorie
+        fields = '__all__'
+
+
+class ProductSerializerAll(serializers.ModelSerializer):
+    posted_by = UserSerializer(many=False)
+    category = Categoryerializer(many=False)
+    media = MediaSerializer(many=True)
+
+    class Meta:
+        model = Product
+        fields = '__all__'

@@ -35,6 +35,56 @@ def make_post(request):
         return Response(data=PostSerializer(post, many=False).data, status=status.HTTP_200_OK)
 
 
+@api_view(['POST'])
+def add_comment(request):
+    if request.method == 'POST':
+        description = request.POST.get("comment")
+        user_id = request.POST.get("user_id")
+        post_id = request.POST.get("post_id")
+        usr = User.objects.get(id=user_id)
+        cmnt = Comment(description=description, posted_by=usr)
+        cmnt.save()
+        pst = Post.objects.get(id=post_id)
+        pst.comments.add(cmnt)
+        pst.save()
+        return Response(data=PostSerializer(pst, many=False).data, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def add_like(request):
+    if request.method == 'POST':
+        user_id = request.POST.get("user_id")
+        post_id = request.POST.get("post_id")
+        usr = User.objects.get(id=user_id)
+        pst = Post.objects.get(id=post_id)
+        if usr in pst.likes.all():
+            pst.likes.remove(usr)
+        else:
+            pst.likes.add(usr)
+        pst.save()
+        return Response(data=PostSerializer(pst, many=False).data, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def make_sell(request):
+    if request.method == 'POST':
+
+        description = request.POST.get("description")
+        posted_by = request.POST.get("posted_by")
+        category = request.POST.get("category")
+        price = request.POST.get("price")
+        name = request.POST.get("name")
+        media = request.POST.get("media")
+        cat = Categorie.objects.get(id=category)
+
+        post = Product(description=description, posted_by_id=posted_by, category=cat, name=name, price=price)
+        post.save()
+        for m in json.loads(media):
+            post.media.add(m)
+        post.save()
+        return Response(data=ProductSerializerAll(post, many=False).data, status=status.HTTP_200_OK)
+
+
 class UserViewset(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -60,9 +110,14 @@ class CommentView(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
 
 
-class ProductView(viewsets.ModelViewSet):
+class AllProductView(viewsets.ModelViewSet):
     queryset = Product.objects.all()
-    serializer_class = ProductSerializer
+    serializer_class = ProductSerializerAll
+
+
+class CategoryViewset(viewsets.ModelViewSet):
+    queryset = Categorie.objects.all()
+    serializer_class = Categoryerializer
 
 
 @api_view(['POST'])
