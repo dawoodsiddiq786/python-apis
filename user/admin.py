@@ -40,13 +40,6 @@ admin.site.register(Product, ProductShow)
 
 
 
-class OrderShow(admin.ModelAdmin):
-    list_display = ('product', 'ordered_by', 'created_at',)
-    list_filter = ('created_at', )
-
-
-admin.site.register(Order, OrderShow)
-
 
 
 

@@ -85,21 +85,13 @@ class Product(models.Model):
     is_used = models.BooleanField(default=False)
     is_by_admin = models.BooleanField(default=False)
     posted_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    ordered_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True,related_name='orderby')
+    is_delivered = models.BooleanField(default=False)
+    is_cash = models.BooleanField(default=True)
     created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return str(self.name)
-
-
-class Order(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.PROTECT, null=True)
-    is_cash = models.BooleanField(default=False)
-    is_delivered = models.BooleanField(default=False)
-    ordered_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    created_at = models.DateTimeField(default=timezone.now)
-
-    def __str__(self):
-        return str(self.created_at)
 
 
 class Comment(models.Model):
@@ -111,8 +103,8 @@ class Post(models.Model):
     description = models.CharField(max_length=500, default='')
     media = models.ManyToManyField(Media, related_name='likffes')
     posted_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    likes = models.ManyToManyField(User, related_name='likces', default=None,null=True)
-    comments = models.ManyToManyField(Comment, related_name='cc', default=None,null=True)
+    likes = models.ManyToManyField(User, related_name='likces', default=None, null=True)
+    comments = models.ManyToManyField(Comment, related_name='cc', default=None, null=True)
     created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
