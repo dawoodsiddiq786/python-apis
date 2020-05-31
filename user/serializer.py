@@ -55,6 +55,7 @@ class ProductSerializerAll(serializers.ModelSerializer):
     posted_by = UserSerializer(many=False)
     category = Categoryerializer(many=False)
     media = MediaSerializer(many=True)
+    ordered_by = UserSerializer(many=False)
 
     class Meta:
         model = Product
