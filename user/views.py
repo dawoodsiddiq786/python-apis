@@ -115,6 +115,9 @@ class AllProductView(viewsets.ModelViewSet):
     serializer_class = ProductSerializerAll
 
 
+class AllProductPatch(viewsets.ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializerSkinny
 class CategoryViewset(viewsets.ModelViewSet):
     queryset = Categorie.objects.all()
     serializer_class = Categoryerializer

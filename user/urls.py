@@ -6,6 +6,7 @@ from user.views import *
 
 router = SimpleRouter()
 
+router.register('products/edit', AllProductPatch, 'ProductView')
 router.register('products', AllProductView, 'ProductView')
 router.register('user', UserViewset, 'order')
 router.register('post', PostView, 'PostView')
