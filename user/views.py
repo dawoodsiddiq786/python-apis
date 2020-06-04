@@ -21,6 +21,11 @@ def login(request):
         return Response(data=UserSerializer(user, many=True).data, status=status.HTTP_200_OK)
 
 
+class UserViewset(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
 @api_view(['POST'])
 def make_post(request):
     if request.method == 'POST':
@@ -75,19 +80,19 @@ def make_sell(request):
         price = request.POST.get("price")
         name = request.POST.get("name")
         media = request.POST.get("media")
+        reason_for_selling = request.POST.get("reason_for_selling")
+        address = request.POST.get("address")
+        volume = request.POST.get("volume")
+        model = request.POST.get("model")
+        brand = request.POST.get("brand")
         cat = Categorie.objects.get(id=category)
-
-        post = Product(description=description, posted_by_id=posted_by, category=cat, name=name, price=price)
+        post = Product(model=model, brand=brand, volume=volume, address=address, reason_for_selling=reason_for_selling,
+                       description=description, posted_by_id=posted_by, category=cat, name=name, price=price)
         post.save()
         for m in json.loads(media):
             post.media.add(m)
         post.save()
         return Response(data=ProductSerializerAll(post, many=False).data, status=status.HTTP_200_OK)
-
-
-class UserViewset(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
 
 
 class PostView(viewsets.ModelViewSet):
@@ -118,6 +123,8 @@ class AllProductView(viewsets.ModelViewSet):
 class AllProductPatch(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializerSkinny
+
+
 class CategoryViewset(viewsets.ModelViewSet):
     queryset = Categorie.objects.all()
     serializer_class = Categoryerializer

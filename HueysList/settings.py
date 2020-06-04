@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'fcm_django',
     'rest_framework_swagger',
     'user.apps.UserConfig',
+    'chat.apps.ChatConfig',
 ]
 
 MIDDLEWARE = [

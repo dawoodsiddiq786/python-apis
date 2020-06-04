@@ -24,6 +24,7 @@ schema_view = get_swagger_view(title='Pastebin API')
 urlpatterns = [
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('admin/', admin.site.urls),
+    path('chat/', include('chat.urls')),
     path('user/', include('user.urls')),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
