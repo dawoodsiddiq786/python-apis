@@ -106,7 +106,7 @@ class Comment(models.Model):
 
 class Post(models.Model):
     description = models.CharField(max_length=500, default='')
-    media = models.ManyToManyField(Media, related_name='likffes')
+    media = models.TextField(default='')
     posted_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     likes = models.ManyToManyField(User, related_name='likces', default=None, null=True)
     comments = models.ManyToManyField(Comment, related_name='cc', default=None, null=True)
