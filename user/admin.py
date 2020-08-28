@@ -27,8 +27,6 @@ admin.site.register(Categorie, CategoryShow)
 
 
 
-admin.site.register(Media)
-
 
 class ProductShow(admin.ModelAdmin):
     list_display = ('name', 'description', 'created_at',)

@@ -32,11 +32,7 @@ def make_post(request):
         description = request.POST.get("description")
         posted_by = request.POST.get("posted_by")
         media = request.POST.get("media")
-        post = Post(description=description, posted_by_id=posted_by)
-        post.save()
-        for m in json.loads(media):
-            post.media.add(m)
-        post.save()
+        post = Post.objects.create(description=description, posted_by_id=posted_by, media=media)
         return Response(data=PostSerializer(post, many=False).data, status=status.HTTP_200_OK)
 
 
@@ -73,7 +69,6 @@ def add_like(request):
 @api_view(['POST'])
 def make_sell(request):
     if request.method == 'POST':
-
         description = request.POST.get("description")
         posted_by = request.POST.get("posted_by")
         category = request.POST.get("category")
@@ -86,12 +81,13 @@ def make_sell(request):
         model = request.POST.get("model")
         brand = request.POST.get("brand")
         cat = Categorie.objects.get(id=category)
-        post = Product(model=model, brand=brand, volume=volume, address=address, reason_for_selling=reason_for_selling,
-                       description=description, posted_by_id=posted_by, category=cat, name=name, price=price)
-        post.save()
-        for m in json.loads(media):
-            post.media.add(m)
-        post.save()
+
+        post = Product.objects.create(model=model, brand=brand, volume=volume, address=address,
+                                      reason_for_selling=reason_for_selling,
+                                      description=description, posted_by_id=posted_by, category=cat, name=name,
+                                      price=price,
+                                      media=str(media))
+
         return Response(data=ProductSerializerAll(post, many=False).data, status=status.HTTP_200_OK)
 
 
@@ -103,11 +99,6 @@ class PostView(viewsets.ModelViewSet):
 class PostViewCreate(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSkinnySerializer
-
-
-class MediaView(viewsets.ModelViewSet):
-    queryset = Media.objects.all()
-    serializer_class = MediaSerializer
 
 
 class CommentView(viewsets.ModelViewSet):
@@ -136,6 +127,8 @@ def simple_upload(request):
         myfile = request.FILES['file']
         fs = FileSystemStorage()
         filename = fs.save(myfile.name, myfile)
+
+
         uploaded_file_url = fs.url(filename)
 
         return Response({'url': 'http://18.217.127.10:9001' + uploaded_file_url}, status=status.HTTP_201_CREATED)

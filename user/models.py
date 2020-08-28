@@ -48,7 +48,7 @@ class User(AbstractBaseUser):
     is_superuser = models.BooleanField(default=False)
     password = models.CharField(max_length=20, default=None)
     image = models.URLField(blank=True,
-                            default='https://elysator.com/wp-content/uploads/blank-profile-picture-973460_1280-e1523978675847.png')
+                            default='http://192.168.1.5:8001/media/image_picker_E34557B2-4E0D-4E94-89D3-8F7D529EB41F-8866-000059F15CE19779.png')
     address = models.CharField(max_length=600, default='')
     date_joined = models.DateTimeField(default=timezone.now)
 
@@ -60,20 +60,13 @@ class Categorie(models.Model):
     name = models.CharField(max_length=50, default='')
     description = models.CharField(max_length=500, default='')
     image = models.URLField(blank=True,
-                            default='https://elysator.com/wp-content/uploads/blank-profile-picture-973460_1280-e1523978675847.png')
+                            default='http://192.168.1.5:8001/media/image_picker_E34557B2-4E0D-4E94-89D3-8F7D529EB41F-8866-000059F15CE19779.png')
     created = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return str(self.name)
 
 
-class Media(models.Model):
-    created = models.DateTimeField(default=timezone.now)
-    image = models.URLField(blank=True,
-                            default='https://elysator.com/wp-content/uploads/blank-profile-picture-973460_1280-e1523978675847.png')
-
-    def __str__(self):
-        return str(self.created)
 
 
 class Product(models.Model):
@@ -85,7 +78,7 @@ class Product(models.Model):
     reason_for_selling = models.TextField(default='')
     brand = models.TextField(default='')
     model = models.TextField(default='')
-    media = models.ManyToManyField(Media)
+    media = models.TextField(default='')
     price = models.FloatField(max_length=500, blank=False)
     is_used = models.BooleanField(default=False)
     is_by_admin = models.BooleanField(default=False)
