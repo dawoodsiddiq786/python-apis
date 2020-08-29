@@ -48,7 +48,7 @@ class User(AbstractBaseUser):
     is_superuser = models.BooleanField(default=False)
     password = models.CharField(max_length=20, default=None)
     image = models.URLField(blank=True,
-                            default='http://192.168.1.5:8001/media/image_picker_E34557B2-4E0D-4E94-89D3-8F7D529EB41F-8866-000059F15CE19779.png')
+                            default='https://hueys-list.s3-ap-southeast-2.amazonaws.com/ScBKUMNEguunnamed.png')
     address = models.CharField(max_length=600, default='')
     date_joined = models.DateTimeField(default=timezone.now)
 
@@ -60,7 +60,7 @@ class Categorie(models.Model):
     name = models.CharField(max_length=50, default='')
     description = models.CharField(max_length=500, default='')
     image = models.URLField(blank=True,
-                            default='http://192.168.1.5:8001/media/image_picker_E34557B2-4E0D-4E94-89D3-8F7D529EB41F-8866-000059F15CE19779.png')
+                            default='https://hueys-list.s3-ap-southeast-2.amazonaws.com/ScBKUMNEguunnamed.png')
     created = models.DateTimeField(default=timezone.now)
 
     def __str__(self):

@@ -1,14 +1,18 @@
 import json
+import os
 
+import boto
 from django.shortcuts import render
 from rest_framework import status, viewsets
 # Create your views here.
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-
+from django.utils.crypto import get_random_string
 from django.core.files.storage import FileSystemStorage
-
+from boto.s3.connection import S3Connection
+from boto.s3.key import Key
 from user.models import *
+from PIL import Image
 from user.serializer import *
 
 
@@ -125,14 +129,41 @@ class CategoryViewset(viewsets.ModelViewSet):
 def simple_upload(request):
     if request.method == 'POST' and request.FILES['file']:
         myfile = request.FILES['file']
-        fs = FileSystemStorage()
-        filename = fs.save(myfile.name, myfile)
 
+        AWS_ACCESS_KEY_ID = 'AKIAXWX2LQE6XYTZIPY6'
+        AWS_SECRET_ACCESS_KEY = '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'
+        AWS_STORAGE_BUCKET_NAME = 'hueys-list'
 
-        uploaded_file_url = fs.url(filename)
+        conn = boto.s3.connect_to_region('ap-southeast-2',
+                                         aws_access_key_id=AWS_ACCESS_KEY_ID,
+                                         aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+                                         is_secure=True,  # uncomment if you are not using ssl
+                                         calling_format=boto.s3.connection.OrdinaryCallingFormat(),
+                                         )
 
-        return Response({'url': 'http://18.217.127.10:9001' + uploaded_file_url}, status=status.HTTP_201_CREATED)
-    return Response({'result': 'Only Post Requ'}, status=status.HTTP_401_UNAUTHORIZED)
+        bucket = conn.get_bucket(AWS_STORAGE_BUCKET_NAME)
+
+        # go through each version of the file
+
+        # create a key to keep track of our file in the storage
+
+        k = Key(bucket)
+        k.key = get_random_string(length=10) + myfile.name.replace(' ', '')
+
+        k.set_contents_from_file(myfile)
+
+        # we need to make it public so it can be accessed publicly
+
+        # using a URL like http://s3.amazonaws.com/bucket_name/key
+
+        k.make_public()
+        url = 'https://hueys-list.s3-ap-southeast-2.amazonaws.com/' + k.key
+        return Response({'url': str(url)},
+                        status=status.HTTP_201_CREATED)
+    # except:
+    #     return Response({'url': 'error'}, status=status.HTTP_201_CREATED)
+
+# return Response({'result': 'Only Post Requ'}, status=status.HTTP_401_UNAUTHORIZED)
 
 #
 #
