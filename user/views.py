@@ -130,7 +130,6 @@ def simple_upload(request):
         raw_image = request.FILES['file']
 
         im = Image.open(raw_image)
-        im = im.convert("RGBA")
         output = BytesIO()
 
         # Resize/modify the image
