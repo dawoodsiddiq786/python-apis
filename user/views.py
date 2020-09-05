@@ -1,18 +1,17 @@
-import json
-import os
+import sys
+from io import BytesIO
 
 import boto
-from django.shortcuts import render
+from PIL import Image
+from boto.s3.connection import S3Connection
+from boto.s3.key import Key
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.utils.crypto import get_random_string
 from rest_framework import status, viewsets
 # Create your views here.
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from django.utils.crypto import get_random_string
-from django.core.files.storage import FileSystemStorage
-from boto.s3.connection import S3Connection
-from boto.s3.key import Key
-from user.models import *
-from PIL import Image
+
 from user.serializer import *
 
 
@@ -128,7 +127,22 @@ class CategoryViewset(viewsets.ModelViewSet):
 @api_view(['POST'])
 def simple_upload(request):
     if request.method == 'POST' and request.FILES['file']:
-        myfile = request.FILES['file']
+        raw_image = request.FILES['file']
+
+        im = Image.open(raw_image)
+
+        output = BytesIO()
+
+        # Resize/modify the image
+        # im = im.resize((300, 100))
+        im.thumbnail((300, 300), Image.ANTIALIAS)
+        # after modifications, save it to the output
+        im.save(output, format='JPEG', quality=90)
+        output.seek(0)
+
+        # change the imagefield value to be the newley modifed image value
+        raw_image = InMemoryUploadedFile(output, 'ImageField', "%s.jpg" % raw_image.name.split('.')[0], 'image/jpeg',
+                                         sys.getsizeof(output), None)
 
         AWS_ACCESS_KEY_ID = 'AKIAXWX2LQE6XYTZIPY6'
         AWS_SECRET_ACCESS_KEY = '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'
@@ -148,9 +162,9 @@ def simple_upload(request):
         # create a key to keep track of our file in the storage
 
         k = Key(bucket)
-        k.key = get_random_string(length=10) + myfile.name.replace(' ', '')
+        k.key = get_random_string(length=10) + raw_image.name.replace(' ', '')
 
-        k.set_contents_from_file(myfile)
+        k.set_contents_from_file(raw_image)
 
         # we need to make it public so it can be accessed publicly
 
@@ -160,29 +174,3 @@ def simple_upload(request):
         url = 'https://hueys-list.s3-ap-southeast-2.amazonaws.com/' + k.key
         return Response({'url': str(url)},
                         status=status.HTTP_201_CREATED)
-    # except:
-    #     return Response({'url': 'error'}, status=status.HTTP_201_CREATED)
-
-# return Response({'result': 'Only Post Requ'}, status=status.HTTP_401_UNAUTHORIZED)
-
-#
-#
-# @api_view(['POST'])
-# def signup(request):
-#     if request.method == 'POST':
-#         email = request.POST.get('email')
-#         password = request.POST.get('password')
-#         phone = request.POST.get('phone')
-#         address = request.POST.get('address')
-#         name = request.POST.get('name')
-#
-#         user = User(email=email, password=password, address=address, phone=phone, name=name)
-#         user.save()
-#         return Response(data=UserSerializer(user, many=True).data, status=status.HTTP_200_OK)
-
-#
-# @api_view(['GET'])
-# def info(request):
-#     if request.method == 'GET':
-#         info = Information.objects.all()
-#         return Response(data=InfoSerializer(info, many=True).data, status=status.HTTP_200_OK)
