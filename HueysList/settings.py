@@ -27,7 +27,6 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_ALLOW_ALL = True
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -42,7 +41,7 @@ INSTALLED_APPS = [
     'rest_framework_swagger',
     'user.apps.UserConfig',
     'chat.apps.ChatConfig',
-
+    'compress_storage',
     'storages',
 ]
 
@@ -118,7 +117,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -135,12 +133,7 @@ FCM_DJANGO_SETTINGS = {
     "DELETE_INACTIVE_DEVICES": False,
 }
 
-
-
-
-
-
-#S3 SETTINGS
+# S3 SETTINGS
 
 
 AWS_ACCESS_KEY_ID = 'AKIAXWX2LQE6XYTZIPY6'
