@@ -136,16 +136,16 @@ def simple_upload(request):
         # Resize/modify the image
         # im = im.resize((300, 100))
 
-        for orientation in ExifTags.TAGS.keys():
-            if ExifTags.TAGS[orientation] == 'Orientation': break
-        exif = dict(im._getexif().items())
-
-        if exif[orientation] == 3:
-            im = im.rotate(180, expand=True)
-        elif exif[orientation] == 6:
-            im = im.rotate(270, expand=True)
-        elif exif[orientation] == 8:
-            im = im.rotate(90, expand=True)
+        # for orientation in ExifTags.TAGS.keys():
+        #     if ExifTags.TAGS[orientation] == 'Orientation': break
+        # exif = dict(im._getexif().items())
+        #
+        # if exif[orientation] == 3:
+        #     im = im.rotate(180, expand=True)
+        # elif exif[orientation] == 6:
+        #     im = im.rotate(270, expand=True)
+        # elif exif[orientation] == 8:
+        #     im = im.rotate(90, expand=True)
 
         im.thumbnail((600, 600), Image.ANTIALIAS)
         # after modifications, save it to the output
