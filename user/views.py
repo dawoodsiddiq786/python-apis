@@ -135,7 +135,7 @@ def simple_upload(request):
 
         # Resize/modify the image
         # im = im.resize((300, 100))
-        im.thumbnail((300, 300), Image.ANTIALIAS)
+        im.thumbnail((10000, 10000), Image.ANTIALIAS)
         # after modifications, save it to the output
         im.save(output, format='JPEG', quality=90)
         output.seek(0)
