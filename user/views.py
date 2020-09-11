@@ -2,7 +2,7 @@ import sys
 from io import BytesIO
 
 import boto
-from PIL import Image
+from PIL import Image, ExifTags
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 from django.core.files.uploadedfile import InMemoryUploadedFile
@@ -112,7 +112,7 @@ class CommentView(viewsets.ModelViewSet):
 class AllProductView(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializerAll
- 
+
 
 class AllProductPatch(viewsets.ModelViewSet):
     queryset = Product.objects.all()
@@ -135,6 +135,18 @@ def simple_upload(request):
 
         # Resize/modify the image
         # im = im.resize((300, 100))
+
+        for orientation in ExifTags.TAGS.keys():
+            if ExifTags.TAGS[orientation] == 'Orientation': break
+        exif = dict(im._getexif().items())
+
+        if exif[orientation] == 3:
+            im = im.rotate(180, expand=True)
+        elif exif[orientation] == 6:
+            im = im.rotate(270, expand=True)
+        elif exif[orientation] == 8:
+            im = im.rotate(90, expand=True)
+
         im.thumbnail((600, 600), Image.ANTIALIAS)
         # after modifications, save it to the output
         im.save(output, format='JPEG', quality=90)
