@@ -129,32 +129,32 @@ def simple_upload(request):
     if request.method == 'POST' and request.FILES['file']:
         raw_image = request.FILES['file']
 
-        im = Image.open(raw_image)
-        im = im.convert('RGB')
-        output = BytesIO()
-
-        # Resize/modify the image
-        # im = im.resize((300, 100))
-
-        # for orientation in ExifTags.TAGS.keys():
-        #     if ExifTags.TAGS[orientation] == 'Orientation': break
-        # exif = dict(im._getexif().items())
+        # im = Image.open(raw_image)
+        # im = im.convert('RGB')
+        # output = BytesIO()
         #
-        # if exif[orientation] == 3:
-        #     im = im.rotate(180, expand=True)
-        # elif exif[orientation] == 6:
-        #     im = im.rotate(270, expand=True)
-        # elif exif[orientation] == 8:
-        #     im = im.rotate(90, expand=True)
-
-        im.thumbnail((600, 600), Image.ANTIALIAS)
-        # after modifications, save it to the output
-        im.save(output, format='JPEG', quality=90)
-        output.seek(0)
-
-        # change the imagefield value to be the newley modifed image value
-        raw_image = InMemoryUploadedFile(output, 'ImageField', "%s.jpg" % raw_image.name.split('.')[0], 'image/jpeg',
-                                         sys.getsizeof(output), None)
+        # # Resize/modify the image
+        # # im = im.resize((300, 100))
+        #
+        # # for orientation in ExifTags.TAGS.keys():
+        # #     if ExifTags.TAGS[orientation] == 'Orientation': break
+        # # exif = dict(im._getexif().items())
+        # #
+        # # if exif[orientation] == 3:
+        # #     im = im.rotate(180, expand=True)
+        # # elif exif[orientation] == 6:
+        # #     im = im.rotate(270, expand=True)
+        # # elif exif[orientation] == 8:
+        # #     im = im.rotate(90, expand=True)
+        #
+        # im.thumbnail((600, 600), Image.ANTIALIAS)
+        # # after modifications, save it to the output
+        # im.save(output, format='JPEG', quality=90)
+        # output.seek(0)
+        #
+        # # change the imagefield value to be the newley modifed image value
+        # raw_image = InMemoryUploadedFile(output, 'ImageField', "%s.jpg" % raw_image.name.split('.')[0], 'image/jpeg',
+        #                                  sys.getsizeof(output), None)
 
         AWS_ACCESS_KEY_ID = 'AKIAXWX2LQE6XYTZIPY6'
         AWS_SECRET_ACCESS_KEY = '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'
