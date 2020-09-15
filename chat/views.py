@@ -1,18 +1,15 @@
 from django.db.models import Q
-from fcm_django.models import FCMDevice
 from rest_framework import viewsets, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from chat.helpers import get_user_id
-from chat.models import ThreadList, Messages
-from chat.serializer import  *
-
+from chat.serializer import *
 
 
 class ThreadListAll(viewsets.ModelViewSet):
     queryset = ThreadList.objects.all()
     serializer_class = ThreadSerializer
+
 
 @api_view(['GET'])
 def get_all_messages(request):
@@ -20,20 +17,28 @@ def get_all_messages(request):
         sender = request.GET.get("sender")
         receiver = request.GET.get("receiver")
         product = request.GET.get("product", None)
-        print(receiver)
-        print(sender)
-        print(product)
-        thread = ThreadList.objects.filter(Q(sender_id=int(sender)) | Q(reciever_id=int(sender)),
-                                           Q(sender_id=int(receiver)) | Q(reciever_id=int(receiver)),
-                                           product_id=int(product))
 
+        if product:
+            thread = ThreadList.objects.filter(Q(sender_id=int(sender)) | Q(reciever_id=int(sender)),
+                                               Q(sender_id=int(receiver)) | Q(reciever_id=int(receiver)),
+                                               product_id=int(product))
+        else:
+            thread = ThreadList.objects.filter(Q(sender_id=int(sender)) | Q(reciever_id=int(sender)),
+                                               Q(sender_id=int(receiver)) | Q(reciever_id=int(receiver)),
+                                               product=None)
         if thread.exists():
             thread = thread[0]
         else:
-            thread = ThreadList(
-                sender_id=int(sender), reciever_id=int(receiver), product_id=int(product)
-            )
-            thread.save()
+            if product:
+                thread = ThreadList(
+                    sender_id=int(sender), reciever_id=int(receiver), product_id=int(product)
+                )
+                thread.save()
+            else:
+                thread = ThreadList(
+                    sender_id=int(sender), reciever_id=int(receiver), product=None
+                )
+                thread.save()
 
         messages = Messages.objects.filter(thread_id__exact=thread.id)
 
@@ -78,7 +83,7 @@ def send_messages(request):
         messages = Messages.objects.filter(thread_id__exact=thread.id)
 
         if messages.count() > 0:
-            return Response(data={'':''},
+            return Response(data={'': ''},
                             status=status.HTTP_201_CREATED)
         else:
             return Response({"msg": "Messages not found"}, status=status.HTTP_204_NO_CONTENT)
