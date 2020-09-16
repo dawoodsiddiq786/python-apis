@@ -18,27 +18,17 @@ def get_all_messages(request):
         receiver = request.GET.get("receiver")
         product = request.GET.get("product", None)
 
-        if product:
-            thread = ThreadList.objects.filter(Q(sender_id=int(sender)) | Q(reciever_id=int(sender)),
-                                               Q(sender_id=int(receiver)) | Q(reciever_id=int(receiver)),
-                                               product_id=int(product))
-        else:
-            thread = ThreadList.objects.filter(Q(sender_id=int(sender)) | Q(reciever_id=int(sender)),
-                                               Q(sender_id=int(receiver)) | Q(reciever_id=int(receiver)),
-                                               product=None)
+        thread = ThreadList.objects.filter(Q(sender_id=int(sender)) | Q(reciever_id=int(sender)),
+                                           Q(sender_id=int(receiver)) | Q(reciever_id=int(receiver)),
+                                           product=None)
         if thread.exists():
             thread = thread[0]
         else:
-            if product:
-                thread = ThreadList(
-                    sender_id=int(sender), reciever_id=int(receiver), product_id=int(product)
-                )
-                thread.save()
-            else:
-                thread = ThreadList(
-                    sender_id=int(sender), reciever_id=int(receiver), product=None
-                )
-                thread.save()
+
+            thread = ThreadList(
+                sender_id=int(sender), reciever_id=int(receiver)
+            )
+            thread.save()
 
         messages = Messages.objects.filter(thread_id__exact=thread.id)
 
@@ -58,18 +48,17 @@ def send_messages(request):
         text = request.POST.get("text")
         image = request.POST.get("image", None)
         product = request.POST.get("product", None)
-        print(receiver)
-        print(sender)
-        print(product)
+
         thread = ThreadList.objects.filter(Q(sender_id=int(sender)) | Q(reciever_id=int(sender)),
                                            Q(sender_id=int(receiver)) | Q(reciever_id=int(receiver)),
-                                           product_id=int(product))
+                                           product=None)
 
         if thread.exists():
             thread = thread[0]
         else:
+
             thread = ThreadList(
-                sender_id=int(sender), reciever_id=int(receiver), product_id=int(product)
+                sender_id=int(sender), reciever_id=int(receiver), product=None
             )
             thread.save()
 
