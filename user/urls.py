@@ -11,6 +11,7 @@ router.register('products', AllProductView, 'ProductView')
 router.register('user', UserViewset, 'order')
 router.register('post', PostView, 'PostView')
 router.register('category', CategoryViewset, 'PostView')
+router.register('comment', CommentView, 'CommentView')
 
 
 

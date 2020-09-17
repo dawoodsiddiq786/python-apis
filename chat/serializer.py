@@ -14,7 +14,7 @@ class MessagesSerializer(serializers.ModelSerializer):
 class ThreadSerializer(serializers.ModelSerializer):
     sender = UserSerializer()
     reciever = UserSerializer()
- 
+
 
     class Meta:
         model = ThreadList
