@@ -148,13 +148,7 @@ AWS_LOCATION = 'static'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'mysite/static'),
 ]
-STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+STATIC_URL = '/static/'
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 DEFAULT_FILE_STORAGE = 'HueysList.storage_backend.MediaStorage'
-
-REGION = 'us-east-1'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
-MEDIAFILES_LOCATION = 'media/'
-THUMBNAIL_DEBUG = True
